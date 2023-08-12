@@ -1,15 +1,15 @@
 function getComputerChoice(){
       let result;
-      let option;
+      let randomNumber;
       for(let i = 0; i < 3; i++){
-            option = Math.floor(Math.random() * 3)
+            randomNumber = Math.floor(Math.random() * 3)
             
       }
 
-      if(option === 0){
+      if(randomNumber === 0){
             result = "rock"
       }
-      else if(option === 1){
+      else if(randomNumber === 1){
             result = "paper"
       }else{
             result = "scissors"
@@ -73,4 +73,4 @@ function game(){
    return winner;
 }
 
-console.log(game())
+game()
