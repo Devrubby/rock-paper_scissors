@@ -1,76 +1,129 @@
-function getComputerChoice(){
+function getComputerChoice() {
+      /*
+          Returns weaponsButtons random value of either 
+          rock, paper, or scissors
+          */
+
       let result;
-      let randomNumber;
-      for(let i = 0; i < 3; i++){
-            randomNumber = Math.floor(Math.random() * 3)
-            
+      let randomNumber = Math.floor(Math.random() * 3);
+      if (randomNumber === 0) {
+            result = "rock";
+      } else if (randomNumber === 1) {
+            result = "paper";
+      } else {
+            result = "scissors";
       }
 
-      if(randomNumber === 0){
-            result = "rock"
-      }
-      else if(randomNumber === 1){
-            result = "paper"
-      }else{
-            result = "scissors"
-      }
       return result;
 }
 
-function playRound(playerSelection, computerSelection){
+let rounds = 0; //Holds the round value of each gameBegins round
+
+function playRound(playerSelection, computerSelection) {
+      /*Plays weaponsButtons single round of rock, paper, scissors game,
+          between weaponsButtons computer and weaponsButtons player.
+          */
+      rounds += 1;
       let result;
-      let player = playerSelection.toLowerCase()
-      let computer = computerSelection.toLowerCase()
-      if(player === computer){
-            result = `You chose "${player}"
-                      Computer also chose "${computer}"
-                      It is a DRAW`
-      }
-      else if((player === "rock" && computer === "scissors") || (player === "paper" && computer === "rock") || (player === "scissors" && computer === "rock")){
-            result = `You WIN ${player} beats ${computer}`
-      }else{
-            result = `You Lose ${computer} beats ${player}`
+      let player = playerSelection.toLowerCase();
+      let computer = computerSelection.toLowerCase();
+      if (player === computer) {
+            result = `TIE both chose ${player.toUpperCase()} `;
+      } else if (
+            (player === "rock" && computer === "scissors") ||
+            (player === "paper" && computer === "rock") ||
+            (player === "scissors" && computer === "paper")
+      ) {
+            result = `You WIN ${player.toUpperCase()} beats ${computer.toUpperCase()}`;
+      } else {
+            result = `You lose ${computer.toUpperCase()} beats ${player.toUpperCase()}`;
       }
 
       return result;
+}
+let resultDiv = document.querySelector(".resultDiv");
+let roundDisplay = document.querySelector(".resultDiv > #outcome");
 
+let scorePlayer = document.querySelector(".playerscore");
+let scoreComputer = document.querySelector(".computerscore");
+
+let playerScore = 0;
+let computerScore = 0;
+let displayRound = document.getElementById("displayRound");
+
+let buttons = document.querySelectorAll(".weapon");
+
+//Adding  an event listener to each button
+
+buttons.forEach((button) =>
+      button.addEventListener("click", (e) => {
+            let gameBegins = playRound(button.textContent, getComputerChoice());
+            roundDisplay.textContent = gameBegins;
+
+            if (gameBegins.includes("TIE")) {
+                  playerScore++;
+                  computerScore++;
+                  scorePlayer.textContent = `Your current score = ${playerScore}`;
+                  scoreComputer.textContent = `Computer current score = ${computerScore}`;
+                  displayRound.textContent = `Round ${rounds} is a TIE`;
+            } else if (gameBegins.includes("You WIN")) {
+                  playerScore++;
+                  scorePlayer.textContent = `Your current score = ${playerScore}`;
+                  displayRound.textContent = `You WIN round ${rounds}`;
+            } else {
+                  computerScore++;
+                  scoreComputer.textContent = `Computer current score = ${computerScore}`;
+                  displayRound.textContent = `Computer WINS round ${rounds}`;
+            }
+      })
+);
+
+function buttonDisabler() {
+      //Disables the rock, paper, scissors buttons
+      //And gives an option to either reload the page or reset the current score
+
+      let weaponsButtons = document.querySelectorAll(".weapon");
+      let reloadPage = document.querySelector(".reloadPage");
+      let resetbutton = document.querySelector(".resetScore");
+      for (let i = 0; i < weaponsButtons.length; i++) {
+            weaponsButtons[i].disabled = true;
+      }
+
+      resetbutton.style.visibility = "hidden";
+
+      reloadPage.classList.add("unhide");
 }
 
+buttons.forEach((butt) =>
+      butt.addEventListener("click", () => {
+            if (computerScore === 5 && computerScore > playerScore) {
+                  roundDisplay.textContent = `Computer WIN. Better luck next time`;
+                  resultDiv.setAttribute(
+                        "style",
+                        "background-color: red; color: white; font-size: 20px;"
+                  );
+                  buttonDisabler();
+            } else if (playerScore === 5 && playerScore > computerScore) {
+                  roundDisplay.textContent = `Hurray you WIN`;
+                  resultDiv.setAttribute(
+                        "style",
+                        "background-color: green; color: white; font-size: 23px; font-weight: bolder"
+                  );
+                  buttonDisabler();
+            } else if (
+                  (playerScore === 5 && computerScore === 5) ||
+                  (computerScore === 5 && playerScore === 5)
+            ) {
+                  roundDisplay.textContent = "TIE";
+                  resultDiv.style.backgroundColor = "white";
+                  buttonDisabler();
+            }
+      })
+);
 
+let resetButton = document.querySelector(".resetScore");
+resetButton.addEventListener("click", () => window.location.reload());
 
-function game(){
-      let player, computer, gameBegins;
-      let scorePlayer = 0, scoreComputer = 0;
-      let winner;
-      for(let i = 1; i <= 5; i++){
-      
-      player = prompt("Enter either rock,  paper. or scissors. Inputs are caseinsensitive")
-      if(player === null){
-            break;
-      }
-      computer = getComputerChoice()
-       gameBegins = playRound(player, computer)
-       if(gameBegins.includes("You Lose")){
-            scoreComputer++
-       }else if(gameBegins.includes("You WIN")){
-            scorePlayer++;
-       }
-       alert(`${gameBegins} 
-      Your current score = ${scorePlayer}
-      Computer current score = ${scoreComputer}`)
-       
-      }
-      if(scorePlayer > scoreComputer){
-            winner = `You WIN with a total score of: ${scorePlayer}\nVS\nComputer total score of : ${scoreComputer}`
-      }else if(scorePlayer < scoreComputer){
-         winner = `Computer WIN with a total score of : ${scoreComputer}\nVS\nYour total score of:  ${scorePlayer}`   
-      }else{
-            winner = `Computer total score = ${scoreComputer}
-            Your total score = ${scorePlayer}
-            DRAW no WINNER`
-      }
-   alert(winner)
-   return winner;
-}
+let refreshPage = document.querySelector(".reloadPage");
 
-game()
+refreshPage.addEventListener("click", () => window.location.reload());
