@@ -41,6 +41,9 @@ function playRound(playerSelection, computerSelection) {
 
       return result;
 }
+
+
+
 let resultDiv = document.querySelector(".resultDiv");
 let roundDisplay = document.querySelector(".resultDiv > #outcome");
 
@@ -57,6 +60,7 @@ let buttons = document.querySelectorAll(".weapon");
 
 buttons.forEach((button) =>
       button.addEventListener("click", (e) => {
+
             let gameBegins = playRound(button.textContent, getComputerChoice());
             roundDisplay.textContent = gameBegins;
 
@@ -97,19 +101,25 @@ function buttonDisabler() {
 buttons.forEach((butt) =>
       butt.addEventListener("click", () => {
             if (computerScore === 5 && computerScore > playerScore) {
+                  let computerSound = new Audio('./sounds/lost.mp3')
                   roundDisplay.textContent = `Computer WIN. Better luck next time`;
                   resultDiv.setAttribute(
                         "style",
                         "background-color: red; color: white; font-size: 20px;"
                   );
+                  computerSound.play()
                   buttonDisabler();
+
             } else if (playerScore === 5 && playerScore > computerScore) {
+                  let sound = new Audio('./sounds/winner.mp3')
                   roundDisplay.textContent = `Hurray you WIN`;
                   resultDiv.setAttribute(
                         "style",
                         "background-color: green; color: white; font-size: 23px; font-weight: bolder"
                   );
+                  sound.play()
                   buttonDisabler();
+
             } else if (
                   (playerScore === 5 && computerScore === 5) ||
                   (computerScore === 5 && playerScore === 5)
@@ -120,6 +130,7 @@ buttons.forEach((butt) =>
             }
       })
 );
+
 
 let resetButton = document.querySelector(".resetScore");
 resetButton.addEventListener("click", () => window.location.reload());
